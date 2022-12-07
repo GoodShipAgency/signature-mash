@@ -51,7 +51,7 @@ export default class SignPDF {
         ByteRange.push(PDFName.of(DEFAULT_BYTE_RANGE_PLACEHOLDER));
 
         const signatureDict = loadedPdf.context.obj({
-                  Type: 'Sig',
+            Type: 'Sig',
             Filter: 'Adobe.PPKLite',
             SubFilter: 'adbe.pkcs7.detached',
             ByteRange,
