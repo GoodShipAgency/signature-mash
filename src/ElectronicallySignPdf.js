@@ -1,9 +1,6 @@
 import muhammara from 'muhammara';
-import fs, {ReadStream} from 'fs';
-import {SignPdf} from "node-signpdf";
-import {plainAddPlaceholder} from "node-signpdf/dist/helpers/index.js";
 
-export default class SignPDFHummus {
+export default class ElectronicallySignPdf {
     addElectronicSignature(pdfPath, pdfOutputPath, additionalOptions = {}) {
         const name = additionalOptions.name;
         const signature = additionalOptions.signature || 1;
@@ -15,7 +12,6 @@ export default class SignPDFHummus {
             modifiedFilePath:
             pdfOutputPath
         });
-
 
         let pageModifier = new muhammara.PDFPageModifier(writer, pageCount - 1, true);
         pageModifier
@@ -34,16 +30,4 @@ export default class SignPDFHummus {
         writer.end();
     }
 
-    sign(pdfPath, pdfOutputPath, p12Buffer, reason) {
-        const signer = new SignPdf();
-
-        let pdfBuffer = fs.readFileSync(pdfPath);
-        pdfBuffer = plainAddPlaceholder({
-            pdfBuffer,
-            reason,
-        });
-        pdfBuffer = signer.sign(pdfBuffer, p12Buffer, {passphrase: '1234'});
-
-        fs.writeFileSync(pdfOutputPath, pdfBuffer);
-    }
 }

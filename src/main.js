@@ -1,41 +1,31 @@
-import SignPDF from "./SignPDF.js";
-import SignPDFHummus from "./SignPDFHummus.js";
-import fs from "fs";
-import path from "node:path";
-import {extractSignature, plainAddPlaceholder} from "node-signpdf/dist/helpers/index.js";
-import {SignPdf} from "node-signpdf";
+import DigitallySignPdf from "./DigitallySignPdf.js";
+import ElectronicallySignPdf from "./ElectronicallySignPdf.js";
 
-(async function main() {
-    const p12Buffer = fs.readFileSync('./resource/keys/key.p12');
-    const signer = new SignPDFHummus();
+import fastify from "fastify";
+import multer from "fastify-multer";
 
-    const originalPath = './resource/ExampleDocumentNoDefinedSignatureFields.pdf';
-    // unix timestamp
-    const timestamp = Math.floor(Date.now() / 1000);
+const app = fastify();
 
-    const masterPath = `./exports/Document-${timestamp}_master.pdf`;
-    fs.copyFile(originalPath, masterPath, (err) => {});
+const upload = multer({storage: multer.memoryStorage()});
+app.register(multer.contentParser)
 
-    // Sign the original
-    const signedOriginalPath = `./exports/Document-${timestamp}_original_signed.pdf`;
-    signer.sign(originalPath, signedOriginalPath, p12Buffer, 'Original non-electronically signed document digitally signed by server for review');
+app.get('/', async (req, res) => {
+    // build a form which allows you to upload a pdf
+    const form = '<form method="post" action="/sign/electronic" enctype="multipart/form-data">' + '<input type="file" name="pdf" />' + '<input type="submit" value="Submit" />' + '</form>';
 
-    // Add first signature
-    const firstSignaturePath = `./exports/Document-${timestamp}_signature_1.pdf`;
-    signer.addElectronicSignature(masterPath, masterPath, {
-        name: 'Karl Matthew Jacques',
-        signature: 1,
-    });
+    res.code(200)
+        .type('text/html')
+        .send('Server is online. Use POST /sign/electronic and POST /sign/digital endpoints to sign pdfs.' + form);
 
-    signer.sign(masterPath, firstSignaturePath, p12Buffer, 'Signed by Karl Matthew Jacques - not yet complete');
+});
 
-    // Add second signature
-    const secondSignaturePath = `./exports/Document-${timestamp}_signature_2.pdf`;
-    signer.addElectronicSignature(masterPath, masterPath, {
-        name: 'Amy Kate Blackburn',
-        signature: 2,
-    });
+app.post("/sign/electronic", { preHandler: upload.single('pdf') }, (req, res) => {
+    const electronicallySignPdf = new ElectronicallySignPdf();
+    console.log(req.file);
+    res.code(200)
+        .type('application/pdf')
+        .send(req.file.buffer);
+});
 
-    signer.sign(masterPath, secondSignaturePath, p12Buffer, 'Signed by Amy Kate Blackburn - not yet complete');
-
-})();
+// start the server
+app.listen({port: 3000});
