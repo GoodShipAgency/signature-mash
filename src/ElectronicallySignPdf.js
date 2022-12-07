@@ -1,23 +1,19 @@
 import muhammara from 'muhammara';
 
 export default class ElectronicallySignPdf {
-    addElectronicSignature(pdfPath, pdfOutputPath, additionalOptions = {}) {
-        const name = additionalOptions.name;
-        const signature = additionalOptions.signature || 1;
-
-        const reader = muhammara.createReader(pdfPath);
+    addElectronicSignature(pdfBuffer, name, signatureIndex =1 ) {
+        const pdfStream = new muhammara.PDFRStreamForBuffer(pdfBuffer);
+        const reader = muhammara.createReader(pdfStream);
         const pageCount = reader.getPagesCount();
 
-        const writer = muhammara.createWriterToModify(pdfPath, {
-            modifiedFilePath:
-            pdfOutputPath
-        });
+        let pdfOutStream = new muhammara.PDFWStreamForBuffer();
+        const writer = muhammara.createWriterToModify(pdfStream, pdfOutStream);
 
         let pageModifier = new muhammara.PDFPageModifier(writer, pageCount - 1, true);
         pageModifier
             .startContext()
             .getContext()
-            .writeText(name, 150, 510 - ((signature - 1) * 20), {
+            .writeText('Test', 150, 510 - ((signatureIndex - 1) * 20), {
                 font: writer.getFontForFile(
                     "resource/font/AgreementSignature.ttf"
                 ),
@@ -28,6 +24,8 @@ export default class ElectronicallySignPdf {
 
         pageModifier.endContext().writePage();
         writer.end();
+
+        return pdfOutStream.buffer;
     }
 
 }

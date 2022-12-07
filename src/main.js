@@ -4,7 +4,7 @@ import ElectronicallySignPdf from "./ElectronicallySignPdf.js";
 import fastify from "fastify";
 import multer from "fastify-multer";
 
-const app = fastify();
+const app = fastify({logger: true});
 
 const upload = multer({storage: multer.memoryStorage()});
 app.register(multer.contentParser)
@@ -21,10 +21,14 @@ app.get('/', async (req, res) => {
 
 app.post("/sign/electronic", { preHandler: upload.single('pdf') }, (req, res) => {
     const electronicallySignPdf = new ElectronicallySignPdf();
-    console.log(req.file);
+
+    const output = electronicallySignPdf.addElectronicSignature(req.file.buffer, 'Karl Matthew Jacques', 1);
+
+    // send output to browser as a download
     res.code(200)
         .type('application/pdf')
-        .send(req.file.buffer);
+        // .header('Content-Disposition', 'attachment; filename="signed.pdf"')
+        .send(output);
 });
 
 // start the server
