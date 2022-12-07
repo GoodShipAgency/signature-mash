@@ -11,7 +11,11 @@ app.register(multer.contentParser)
 
 app.get('/', async (req, res) => {
     // build a form which allows you to upload a pdf
-    const form = '<form method="post" action="/sign/electronic" enctype="multipart/form-data">' + '<input type="file" name="pdf" />' + '<input type="submit" value="Submit" />' + '</form>';
+    const form = '<form method="post" action="/sign/electronic" enctype="multipart/form-data">' +
+        '<input type="file" name="pdf" />' +
+        '<input type="text" name="name" />' +
+        '<input type="number" name="signatureIndex"/>' +
+        '<input type="submit" value="Submit" />' + '</form>';
 
     res.code(200)
         .type('text/html')
@@ -19,10 +23,14 @@ app.get('/', async (req, res) => {
 
 });
 
-app.post("/sign/electronic", { preHandler: upload.single('pdf') }, (req, res) => {
+app.post("/sign/electronic", {preHandler: upload.single('pdf')}, (req, res) => {
     const electronicallySignPdf = new ElectronicallySignPdf();
 
-    const output = electronicallySignPdf.addElectronicSignature(req.file.buffer, 'Karl Matthew Jacques', 1);
+    const output = electronicallySignPdf.addElectronicSignature(
+        req.file.buffer,
+        req.body.name,
+        req.body?.signatureIndex
+    );
 
     // send output to browser as a download
     res.code(200)
