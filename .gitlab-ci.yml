@@ -1,0 +1,34 @@
+variables:
+  DOCKER_DRIVER: overlay
+  CONTAINER_IMAGE_PREFIX: registry.gitlab.com/mashbo/signature-mash:$CI_COMMIT_SHA
+
+image: docker:latest
+services:
+  - name: docker:dind
+    command: [ "--tls=false" ]
+
+stages:
+  - lint
+  - build
+
+before_script:
+  - docker info
+  - echo $CONTAINER_IMAGE_PREFIX
+  - echo $CI_COMMIT_REF_SLUG
+  - echo $CI_JOB_NAME
+  - echo $CI_JOB_STAGE
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+  - eval $(ssh-agent -s)
+#  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+
+tsc:
+  stage: lint
+  script:
+      - yarn install
+      - tsc --noEmit
+
+build:
+  stage: build
+  script:
+    - env DOCKER_BUILDKIT=1 docker build --network host --ssh default -t $CONTAINER_IMAGE_PREFIX -f Dockerfile .
+    - docker push $CONTAINER_IMAGE_PREFIX
