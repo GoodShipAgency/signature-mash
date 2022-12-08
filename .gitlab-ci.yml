@@ -2,11 +2,6 @@ variables:
   DOCKER_DRIVER: overlay
   CONTAINER_IMAGE_PREFIX: registry.gitlab.com/mashbo/signature-mash:$CI_COMMIT_SHA
 
-image: docker:latest
-services:
-  - name: docker:dind
-    command: [ "--tls=false" ]
-
 stages:
   - lint
   - build
@@ -23,12 +18,17 @@ before_script:
 
 tsc:
   stage: lint
+  image: node:18-alpine3.15
   script:
       - yarn install
       - tsc --noEmit
 
 build:
   stage: build
+  image: docker:latest
+  services:
+    - name: docker:dind
+      command: [ "--tls=false" ]
   script:
     - env DOCKER_BUILDKIT=1 docker build --network host --ssh default -t $CONTAINER_IMAGE_PREFIX -f Dockerfile .
     - docker push $CONTAINER_IMAGE_PREFIX
