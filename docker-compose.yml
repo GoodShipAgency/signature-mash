@@ -7,6 +7,9 @@ services:
             context: .
             dockerfile: Dockerfile
         ports:
-            - "3000:80"
+            - "3000:3000"
         volumes:
-            - .:/app
+            - ./src:/app/src
+            - ./tsconfig.json:/app/tsconfig.json
+            - ./package.json:/app/package.json
+            - ./yarn.lock:/app/yarn.lock
