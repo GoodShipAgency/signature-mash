@@ -65,4 +65,4 @@ app.post("/sign/digital", {preHandler: upload.single('pdf')}, (req, res) => {
 });
 
 // start the server
-app.listen({port: 3000});
+app.listen({port: 80, host: '0.0.0.0'});
