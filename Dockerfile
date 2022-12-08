@@ -13,4 +13,6 @@ COPY resource /app/resource
 
 RUN yarn install --frozen-lockfile
 
+RUN mkdir /app/tmp
+
 CMD [ "yarn", "start" ]
