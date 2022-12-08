@@ -8,8 +8,3 @@ services:
             dockerfile: Dockerfile
         ports:
             - "3000:3000"
-        volumes:
-            - ./src:/app/src
-            - ./tsconfig.json:/app/tsconfig.json
-            - ./package.json:/app/package.json
-            - ./yarn.lock:/app/yarn.lock

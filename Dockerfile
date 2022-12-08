@@ -1,5 +1,7 @@
-FROM node:18-alpine3.15
+FROM node:18-alpine3.16
 
+RUN apk upgrade
+RUN apk update
 RUN apk add g++ make py3-pip
 
 WORKDIR /app
