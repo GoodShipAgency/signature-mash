@@ -19,7 +19,7 @@ tsc:
   image: node:18-alpine3.15
   script:
       - yarn install
-      - yarn install -g typescript
+      - yarn global add typescript
       - tsc --noEmit
 
 build:
