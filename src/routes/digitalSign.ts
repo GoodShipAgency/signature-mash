@@ -4,7 +4,6 @@ import DigitallySignPdf from "../DigitallySignPdf";
 import * as  fs from "fs";
 import {app, upload} from "../app";
 
-type DigitalSignRequestType = Static<typeof DigitalSignRequest> & FilesInRequest;
 
 const DigitalSignRequest = Type.Object({
     name: Type.String(),
@@ -12,6 +11,9 @@ const DigitalSignRequest = Type.Object({
     location: Type.String(),
     contactInfo: Type.String(),
 });
+
+type DigitalSignRequestType = Static<typeof DigitalSignRequest>;
+
 
 app.post<{ Body: DigitalSignRequestType }>("/sign/digital", {preHandler: upload.single('pdf')}, (req, res) => {
     const digitallySignPdf = new DigitallySignPdf();

@@ -5,6 +5,7 @@ RUN apk add g++ make py3-pip
 WORKDIR /app
 COPY package.json /app/package.json
 COPY yarn.lock /app/yarn.lock
+COPY tsconfig.json /app/tsconfig.json
 COPY src /app/src
 COPY resource /app/resource
 
