@@ -4,16 +4,17 @@ import fs from "fs";
 
 export default class DigitallySignPdf {
 
-    sign(pdfPath, pdfOutputPath, p12Buffer, reason) {
+    sign(pdfBuffer, p12Buffer, name, reason, location, contactInfo) {
         const signer = new SignPdf();
 
-        let pdfBuffer = fs.readFileSync(pdfPath);
         pdfBuffer = plainAddPlaceholder({
             pdfBuffer,
             reason,
+            name,
+            location,
+            contactInfo,
         });
-        pdfBuffer = signer.sign(pdfBuffer, p12Buffer, {passphrase: '1234'});
 
-        fs.writeFileSync(pdfOutputPath, pdfBuffer);
+        return signer.sign(pdfBuffer, p12Buffer, {passphrase: '1234'});
     }
 }
