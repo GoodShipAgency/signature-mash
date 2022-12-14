@@ -2,7 +2,7 @@ FROM node:18-alpine3.16
 
 RUN apk upgrade
 RUN apk update
-RUN apk add g++ make py3-pip
+RUN apk add g++ make py3-pip curl
 
 WORKDIR /app
 COPY package.json /app/package.json
