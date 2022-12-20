@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as Buffer from "buffer";
 
 export default class ElectronicallySignPdf {
-    addElectronicSignature(pdfBuffer: Buffer, name: string, signatureIndex =1 ) {
+    addElectronicSignature(pdfBuffer: Buffer, name: string, x: number, y: number, size: number) {
         // generate unique filename
         const filename = 'tmp/file-' + Date.now() + Math.random() * 5000 + '.pdf';
 
@@ -21,11 +21,11 @@ export default class ElectronicallySignPdf {
         pageModifier
             .startContext()
             .getContext()
-            .writeText(name, 150, 510 - ((signatureIndex - 1) * 20), {
+            .writeText(name, x, y, {
                 font: writer.getFontForFile(
                     "resource/font/AgreementSignature.ttf"
                 ),
-                size: 14,
+                size,
                 colorspace: "gray",
                 color: 0x00,
             });

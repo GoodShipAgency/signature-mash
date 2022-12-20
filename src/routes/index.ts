@@ -5,7 +5,9 @@ app.get('/', async (req, res) => {
     const electronicSignForm = '<form method="post" action="/sign/electronic" enctype="multipart/form-data">' +
         '<input type="file" name="pdf" />' +
         '<input type="text" name="name" placeholder="Signee Name"/>' +
-        '<input type="number" name="signatureIndex"/>' +
+        '<input type="number" name="x"/>' +
+        '<input type="number" name="y"/>' +
+        '<input type="number" name="size" placeholder="Optional font size"/>' +
         '<input type="submit" value="Submit" />' + '</form>';
 
     // build a form which allows you to use the digital sign endpoint

@@ -6,7 +6,9 @@ import {app, upload} from "../app";
 
 const ElectronicSignRequest = Type.Object({
     name: Type.String(),
-    signatureIndex: Type.Number(),
+    x: Type.Number(),
+    y: Type.Number(),
+    size: Type.Optional(Type.Number()),
 });
 
 type ElectronicSignRequestType = Static<typeof ElectronicSignRequest> & FilesInRequest;
@@ -17,7 +19,9 @@ app.post<{ Body: ElectronicSignRequestType }>("/sign/electronic", {preHandler: u
     const output = electronicallySignPdf.addElectronicSignature(
         req.file.buffer,
         req.body.name,
-        req.body.signatureIndex
+        req.body.x,
+        req.body.y,
+        req.body.size ?? 18
     );
 
     res.code(200)
