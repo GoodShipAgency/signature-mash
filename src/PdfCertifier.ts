@@ -4,10 +4,10 @@ import {SignPdf} from "node-signpdf";
 import {plainAddPlaceholder} from "node-signpdf/dist/helpers/index.js";
 import * as Buffer from "buffer";
 
-export default class DigitallySignPdf {
+export default class PdfCertifier {
 
-    sign(pdfBuffer: Buffer, p12Buffer: Buffer, name: string, reason: string, location: string, contactInfo: string) {
-        const signer = new SignPdf();
+    certify(pdfBuffer: Buffer, p12Buffer: Buffer, name: string, reason: string, location: string, contactInfo: string) {
+        const nodePdfSigner = new SignPdf();
 
         pdfBuffer = plainAddPlaceholder({
             pdfBuffer,
@@ -17,6 +17,6 @@ export default class DigitallySignPdf {
             contactInfo,
         });
 
-        return signer.sign(pdfBuffer, p12Buffer, {passphrase: '1234'});
+        return nodePdfSigner.sign(pdfBuffer, p12Buffer, {passphrase: '1234'});
     }
 }

@@ -1,22 +1,22 @@
 import {Static, Type} from "@sinclair/typebox";
 import {FilesInRequest} from "fastify-multer/typings/fastify";
-import ElectronicallySignPdf from "../ElectronicallySignPdf";
+import PdfSigner from "../PdfSigner";
 import {FastifyReply} from "fastify";
 import {app, upload} from "../app";
 
-const ElectronicSignRequest = Type.Object({
+const SignRequest = Type.Object({
     name: Type.String(),
     x: Type.Number(),
     y: Type.Number(),
     size: Type.Optional(Type.Number()),
 });
 
-type ElectronicSignRequestType = Static<typeof ElectronicSignRequest> & FilesInRequest;
+type SignRequestType = Static<typeof SignRequest> & FilesInRequest;
 
-app.post<{ Body: ElectronicSignRequestType }>("/sign/electronic", {preHandler: upload.single('pdf')}, (req, res: FastifyReply) => {
-    const electronicallySignPdf = new ElectronicallySignPdf();
+app.post<{ Body: SignRequestType }>("/sign", {preHandler: upload.single('pdf')}, (req, res: FastifyReply) => {
+    const signPdf = new PdfSigner();
 
-    const output = electronicallySignPdf.addElectronicSignature(
+    const output = signPdf.addSignature(
         req.file.buffer,
         req.body.name,
         req.body.x,
