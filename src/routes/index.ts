@@ -1,8 +1,7 @@
 import {app} from "../app";
 
 app.get('/', async (req, res) => {
-    // build a form which allows you to upload a pdf
-    const electronicSignForm = '<form method="post" action="/sign/electronic" enctype="multipart/form-data">' +
+    const signForm = '<form method="post" action="/sign" enctype="multipart/form-data">' +
         '<input type="file" name="pdf" />' +
         '<input type="text" name="name" placeholder="Signee Name"/>' +
         '<input type="number" name="x"/>' +
@@ -10,8 +9,7 @@ app.get('/', async (req, res) => {
         '<input type="number" name="size" placeholder="Optional font size"/>' +
         '<input type="submit" value="Submit" />' + '</form>';
 
-    // build a form which allows you to use the digital sign endpoint
-    const digitalSignForm = '<form method="post" action="/sign/digital" enctype="multipart/form-data">' +
+    const certifyForm = '<form method="post" action="/certify" enctype="multipart/form-data">' +
         '<input type="file" name="pdf" />' +
         '<input type="text" placeholder="Name" name="name" />' +
         '<input type="text" placeholder="Signing Reason" name="reason">' +
@@ -21,5 +19,5 @@ app.get('/', async (req, res) => {
 
     res.code(200)
         .type('text/html')
-        .send('Server is online. Use POST /sign/electronic and POST /sign/digital endpoints to sign pdfs. <br>' + electronicSignForm + '<br>' + digitalSignForm);
+        .send('Server is online. Use POST /sign and POST /certify endpoints to sign pdfs. <br>' + signForm + '<br>' + certifyForm);
 });

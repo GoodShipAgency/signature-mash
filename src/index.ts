@@ -1,5 +1,5 @@
 import "./app";
 
-import "./routes/digitalSign";
-import "./routes/electronicSign";
+import "./routes/sign";
+import "./routes/certify";
 import "./routes/index";

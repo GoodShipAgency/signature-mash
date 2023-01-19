@@ -1,24 +1,23 @@
 import {Static, Type} from "@sinclair/typebox";
-import {FilesInRequest} from "fastify-multer/typings/fastify";
-import DigitallySignPdf from "../DigitallySignPdf";
+import CertifyPdf from "../PdfCertifier";
 import * as  fs from "fs";
 import {app, upload} from "../app";
 
 
-const DigitalSignRequest = Type.Object({
+const CertifyRequest = Type.Object({
     name: Type.String(),
     reason: Type.String(),
     location: Type.String(),
     contactInfo: Type.String(),
 });
 
-type DigitalSignRequestType = Static<typeof DigitalSignRequest>;
+type CertifyRequestType = Static<typeof CertifyRequest>;
 
 
-app.post<{ Body: DigitalSignRequestType }>("/sign/digital", {preHandler: upload.single('pdf')}, (req, res) => {
-    const digitallySignPdf = new DigitallySignPdf();
+app.post<{ Body: CertifyRequestType }>("/certify", {preHandler: upload.single('pdf')}, (req, res) => {
+    const certifyPdf = new CertifyPdf();
 
-    const output = digitallySignPdf.sign(
+    const output = certifyPdf.certify(
         req.file.buffer,
         fs.readFileSync('resource/keys/key.p12'),
         req.body.name,
