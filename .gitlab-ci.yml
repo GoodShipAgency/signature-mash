@@ -1,5 +1,5 @@
 variables:
-  DOCKER_DRIVER: overlay
+  DOCKER_DRIVER: overlay2
   CONTAINER_IMAGE_PREFIX: registry.gitlab.com/mashbo/signature-mash:$CI_COMMIT_SHA
 
 stages:
