@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as Buffer from "buffer";
 
 export default class PdfSigner {
-    addSignature(pdfBuffer: Buffer, name: string, x: number, y: number, size: number) {
+    addText(pdfBuffer: Buffer, text: string, x: number, y: number, size: number) {
         // generate unique filename
         const filename = 'tmp/file-' + Date.now() + Math.random() * 5000 + '.pdf';
 
@@ -21,7 +21,7 @@ export default class PdfSigner {
         pageModifier
             .startContext()
             .getContext()
-            .writeText(name, x, y, {
+            .writeText(text, x, y, {
                 font: writer.getFontForFile(
                     "resource/font/AgreementSignature.ttf"
                 ),
